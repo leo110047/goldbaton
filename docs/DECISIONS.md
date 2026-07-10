@@ -162,7 +162,7 @@ remain green.
 
 ### Decision Pending
 
-Run `npm run verify:phase1` on a real Windows machine after authenticating both
+Run `npm run spike:verify` on a real Windows machine after authenticating both
 provider CLIs interactively. This route does not require repository API-key
 secrets. Prefer native Windows if both Node and Bun probes pass. If native
 execution fails for a platform reason, capture the failing command and error,

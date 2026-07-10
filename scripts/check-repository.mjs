@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -63,7 +63,10 @@ function isBinary(buffer) {
   return buffer.subarray(0, 8192).includes(0);
 }
 
-function inspectFile(file) {
+export function inspectFile(file) {
+  if (!existsSync(file)) {
+    return [];
+  }
   const issues = inspectPath(file);
   const buffer = readFileSync(file);
   const byteLimit = isBinary(buffer) ? 512 * 1024 : 1024 * 1024;

@@ -55,7 +55,7 @@ bun --version
 codex --version
 claude --version
 npm ci
-npm run verify:phase1
+npm run spike:verify
 ```
 
 The command must finish with all repository checks passing and four provider
@@ -84,7 +84,7 @@ not prove authentication, streaming, approval, interrupt, or sandbox behavior
 on Windows.
 
 If the native run fails for a platform reason, save the failing command and full
-error, then run the same `npm ci` and `npm run verify:phase1` sequence in WSL.
+error, then run the same `npm ci` and `npm run spike:verify` sequence in WSL.
 Windows support is not decided until the native result, or native failure plus
 WSL result, has current evidence.
 

@@ -120,7 +120,7 @@ async function run(): Promise<void> {
       return {
         behavior: 'deny',
         interrupt: true,
-        message: 'Phase 1 spike refused an unexpected tool request.',
+        message: 'Claude spike refused an unexpected tool request.',
       };
     }
     interruptPromise ??= new Promise((resolve, reject) => {

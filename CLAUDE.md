@@ -34,6 +34,8 @@ CLIs remain responsible for agent behavior and permissions.
 - `npm run spike:codex`: regenerate Codex bindings and run the live app-server
   spike.
 - `npm run spike:claude`: run the live Claude Agent SDK spike.
+- `npm run spike:verify`: run checks, build, and the complete Node/Bun provider
+  spike matrix.
 
 ## Code Quality
 

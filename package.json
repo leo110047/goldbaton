@@ -25,7 +25,7 @@
     "start": "node dist/main.js",
     "test": "node --test scripts/*.test.mjs && node --import tsx --test spikes/codex/message-bus.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "verify:phase1": "npm run check && npm run build && npm run spike:all && npm run spike:all:bun"
+    "spike:verify": "npm run check && npm run build && npm run spike:all && npm run spike:all:bun"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",

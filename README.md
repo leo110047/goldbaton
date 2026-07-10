@@ -19,7 +19,7 @@ npm start
 成功啟動目前 entrypoint 時會輸出：
 
 ```text
-goldbaton: phase-1 risk spikes ready
+goldbaton: provider spikes ready
 ```
 
 Live provider 驗證會消耗少量 token，且需要兩個 CLI/SDK 已有可用的驗證
@@ -30,11 +30,11 @@ npm run spike:codex
 npm run spike:claude
 ```
 
-Windows 實機完成互動登入後，可用 `npm run verify:phase1` 一次跑完 Node、
+Windows 實機完成互動登入後，可用 `npm run spike:verify` 一次跑完 Node、
 Bun 與兩個 provider 的完整矩陣；不需要 GitHub Actions API-key secrets。
 
 完整契約、Windows 重跑方式與目前證據見
-[`docs/PHASE_1_SPIKES.md`](docs/PHASE_1_SPIKES.md)。
+[`docs/PROVIDER_SPIKES.md`](docs/PROVIDER_SPIKES.md)。
 
 ## 專案結構
 

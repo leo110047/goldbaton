@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { inspectPath, inspectText } from './check-repository.mjs';
+import { inspectFile, inspectPath, inspectText } from './check-repository.mjs';
 
 test('accepts ordinary source text', () => {
   assert.deepEqual(
@@ -37,4 +37,8 @@ test('rejects sensitive paths while allowing examples', () => {
   assert.deepEqual(inspectPath('.env.example'), []);
   assert.match(inspectPath('.env.local').join('\n'), /environment files/);
   assert.match(inspectPath('certs/service.key').join('\n'), /private-key/);
+});
+
+test('skips tracked paths removed from the working tree', () => {
+  assert.deepEqual(inspectFile('missing-renamed-file.ts'), []);
 });

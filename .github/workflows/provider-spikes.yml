@@ -1,4 +1,4 @@
-name: Phase 1 verification
+name: Provider spike verification
 
 on:
   push:

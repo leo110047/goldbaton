@@ -220,7 +220,7 @@ async function startTurn(
 async function run(): Promise<void> {
   const bus = new MessageBus();
   const server = startAppServer(bus);
-  const markerName = `goldbaton-phase1-codex-${process.pid}`;
+  const markerName = `goldbaton-codex-spike-${process.pid}`;
   const markerPath = resolve(tmpdir(), markerName);
   const markerCommand = `node -e "require('fs').writeFileSync(require('path').join(require('os').tmpdir(), '${markerName}'), '')"`;
   try {
