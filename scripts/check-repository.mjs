@@ -79,6 +79,27 @@ export function inspectFile(file) {
   return issues.map((message) => `${file}: ${message}`);
 }
 
+export function inspectAgentInstructions(agentsText, claudeText) {
+  const issues = [];
+  if (agentsText !== claudeText) {
+    issues.push('AGENTS.md and CLAUDE.md must be byte-identical');
+  }
+  if (/\bphase\b/i.test(agentsText) || /\bphase\b/i.test(claudeText)) {
+    issues.push('agent entry points must not contain internal phase labels');
+  }
+  return issues;
+}
+
+function inspectAgentInstructionFiles() {
+  if (!existsSync('AGENTS.md') || !existsSync('CLAUDE.md')) {
+    return ['AGENTS.md and CLAUDE.md are both required'];
+  }
+  return inspectAgentInstructions(
+    readFileSync('AGENTS.md', 'utf8'),
+    readFileSync('CLAUDE.md', 'utf8'),
+  );
+}
+
 function listRepositoryFiles() {
   const result = spawnSync(
     'git',
@@ -92,7 +113,10 @@ function listRepositoryFiles() {
 }
 
 function main() {
-  const issues = listRepositoryFiles().flatMap(inspectFile);
+  const issues = [
+    ...listRepositoryFiles().flatMap(inspectFile),
+    ...inspectAgentInstructionFiles(),
+  ];
   if (issues.length > 0) {
     process.stderr.write(`${issues.join('\n')}\n`);
     process.exitCode = 1;

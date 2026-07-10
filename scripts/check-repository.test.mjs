@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { inspectFile, inspectPath, inspectText } from './check-repository.mjs';
+import {
+  inspectAgentInstructions,
+  inspectFile,
+  inspectPath,
+  inspectText,
+} from './check-repository.mjs';
 
 test('accepts ordinary source text', () => {
   assert.deepEqual(
@@ -41,4 +46,18 @@ test('rejects sensitive paths while allowing examples', () => {
 
 test('skips tracked paths removed from the working tree', () => {
   assert.deepEqual(inspectFile('missing-renamed-file.ts'), []);
+});
+
+test('requires identical phase-free agent entry points', () => {
+  const rules = '# Agent Rules\n\nRead `rules/core.md`.\n';
+
+  assert.deepEqual(inspectAgentInstructions(rules, rules), []);
+  assert.match(
+    inspectAgentInstructions(rules, `${rules}\nClaude only.\n`).join('\n'),
+    /byte-identical/,
+  );
+  assert.match(
+    inspectAgentInstructions('Phase 3 rules', 'Phase 3 rules').join('\n'),
+    /phase labels/,
+  );
 });
