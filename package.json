@@ -9,10 +9,11 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "npm run repository:check && biome check . && tsc -p tsconfig.json --noEmit && npm run spike:types && npm test",
+    "check": "npm run repository:check && biome check . && tsc -p tsconfig.json --noEmit && npm run tools:types && npm run spike:types && npm test",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "lint": "biome lint .",
+    "providers:verify:live": "tsx scripts/verify-providers-live.ts",
     "repository:check": "node scripts/check-repository.mjs",
     "spike:all": "npm run spike:codex && npm run spike:claude",
     "spike:all:bun": "npm run spike:codex:bun && npm run spike:claude:bun",
@@ -23,7 +24,8 @@
     "spike:generate:codex": "node scripts/generate-codex-bindings.mjs",
     "spike:types": "npm run spike:generate:codex && tsc -p tsconfig.spikes.json --noEmit",
     "start": "node dist/main.js",
-    "test": "node --test scripts/*.test.mjs && node --import tsx --test spikes/codex/message-bus.test.ts",
+    "test": "node --test scripts/*.test.mjs && node --import tsx --test \"src/**/*.test.ts\" spikes/codex/message-bus.test.ts",
+    "tools:types": "tsc -p tsconfig.tools.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "spike:verify": "npm run check && npm run build && npm run spike:all && npm run spike:all:bun"
   },
