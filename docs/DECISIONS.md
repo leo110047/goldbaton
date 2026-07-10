@@ -86,3 +86,87 @@ an honest runtime requirement in `package.json#engines`.
   the real integrations require it.
 - When Phase 1 selects Bun or Node, add and verify `package.json#engines` in the
   same change.
+
+---
+
+## ADR-002: Node 24 runtime baseline and Phase 1 provider control surfaces
+
+**Date:** 2026-07-10
+**Status:** Accepted
+
+### Context
+
+Phase 1 had to prove the provider control surfaces before the production
+Provider interface is designed. The probes ran against Codex CLI 0.144.1 and
+Claude Agent SDK 0.3.206, whose bundled Claude Code version is 2.1.206. Both
+Node 24.16.0 and Bun 1.3.11 completed the live probes on macOS arm64.
+
+The Codex probe received streamed text and a server-initiated command approval,
+returned `decline`, observed `serverRequest/resolved`, and completed without
+creating the marker file. The Claude probe received streamed text, answered its
+`canUseTool` callback, resolved `Query.interrupt()`, and terminated the in-flight
+timer. Codex generated 671 bindings that compile with TypeScript 7.0.2.
+
+### Decision
+
+- Use Node 24 as the supported runtime baseline and declare it in
+  `package.json#engines`.
+- Keep `tsx` for executable TypeScript spike harnesses.
+- Keep Bun 1.3.11 as a verified compatibility target, not as the production
+  runtime contract.
+- Continue with Codex app-server in Phase 2. The planned `exec --json` downgrade
+  is not activated because approval round trips passed.
+- Keep generated Codex bindings reproducible and ignored rather than committing
+  a 671-file version-specific snapshot.
+
+### Why This Fits Now
+
+The Claude package formally declares Node support, Node is already present on
+the supported CI and Windows paths, and the product does not yet need Phase 8
+single-binary packaging. Selecting Node minimizes unsupported-runtime risk while
+preserving the measured Bun option.
+
+### Assumptions
+
+- Phase 2 continues to isolate app-server protocol churn inside CodexProvider.
+- A live run on a real Windows machine will complete before native Windows
+  support is claimed.
+- Provider upgrades rerun binding generation, type checking, and live probes.
+
+### Failure Signals
+
+- A supported provider release stops compiling or loses an approval event.
+- Node-specific behavior blocks single-binary packaging or materially worsens
+  startup and distribution.
+- Windows requires a different runtime to pass the same provider contract.
+
+### Best Alternative
+
+Promote Bun to the production baseline when Phase 8 packaging begins if its
+single-executable path still works on every supported OS and its provider probes
+remain green.
+
+### Unknowns
+
+- Native Windows live behavior is still unverified pending the manual run with
+  interactively authenticated provider CLIs.
+- Product use of Claude must use an Anthropic-supported authentication method;
+  it cannot assume a third-party app may reuse consumer `claude.ai` login.
+
+---
+
+## ADR-003: Windows support form remains gated by a live provider run
+
+**Date:** 2026-07-10
+**Status:** Proposed
+
+### Decision Pending
+
+Run `npm run verify:phase1` on a real Windows machine after authenticating both
+provider CLIs interactively. This route does not require repository API-key
+secrets. Prefer native Windows if both Node and Bun probes pass. If native
+execution fails for a platform reason, capture the failing command and error,
+then run the same matrix in WSL before selecting WSL as the baseline.
+
+Until that evidence exists, documentation and packaging must not claim native
+Windows or WSL support.

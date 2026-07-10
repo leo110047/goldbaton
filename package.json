@@ -4,18 +4,36 @@
   "private": true,
   "description": "Local-first AI collaboration console",
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "biome check . && tsc -p tsconfig.json --noEmit",
+    "check": "npm run repository:check && biome check . && tsc -p tsconfig.json --noEmit && npm run spike:types && npm test",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "lint": "biome lint .",
+    "repository:check": "node scripts/check-repository.mjs",
+    "spike:all": "npm run spike:codex && npm run spike:claude",
+    "spike:all:bun": "npm run spike:codex:bun && npm run spike:claude:bun",
+    "spike:claude": "tsx spikes/claude/run.ts",
+    "spike:claude:bun": "bun spikes/claude/run.ts",
+    "spike:codex": "npm run spike:generate:codex && tsx spikes/codex/run.ts",
+    "spike:codex:bun": "npm run spike:generate:codex && bun spikes/codex/run.ts",
+    "spike:generate:codex": "node scripts/generate-codex-bindings.mjs",
+    "spike:types": "npm run spike:generate:codex && tsc -p tsconfig.spikes.json --noEmit",
     "start": "node dist/main.js",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "test": "node --test scripts/*.test.mjs && node --import tsx --test spikes/codex/message-bus.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify:phase1": "npm run check && npm run build && npm run spike:all && npm run spike:all:bun"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
     "@types/node": "24.13.3",
+    "tsx": "4.23.0",
     "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.206"
   }
 }

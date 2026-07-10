@@ -9,12 +9,13 @@ CLIs remain responsible for agent behavior and permissions.
 
 ## Current Scope
 
-- The repository is in Phase 0: toolchain and project skeleton only.
-- Do not add provider integrations, server APIs, persistence, or UI before the
-  corresponding implementation-plan phase begins.
-- Bun versus Node remains a Phase 1 decision. Keep Phase 0 source compatible
-  with both runtimes and avoid runtime-specific APIs unless the spike proves
-  they are required.
+- The repository is in Phase 1: provider risk spikes only.
+- Keep spike harnesses isolated under `spikes/`. Do not turn them into the
+  production Provider interface before Phase 2 begins.
+- Do not add server APIs, persistence, or UI before the corresponding
+  implementation-plan phase begins.
+- Node 24 is the supported runtime baseline. Bun 1.3.11 is a verified
+  compatibility target, not the production contract.
 
 ## Architecture Constraints
 
@@ -29,7 +30,10 @@ CLIs remain responsible for agent behavior and permissions.
 
 - `npm run check`: Biome format/lint plus TypeScript type checking.
 - `npm run build`: compile TypeScript into `dist/`.
-- `npm start`: run the compiled Phase 0 entrypoint.
+- `npm start`: run the compiled current-phase entrypoint.
+- `npm run spike:codex`: regenerate Codex bindings and run the live app-server
+  spike.
+- `npm run spike:claude`: run the live Claude Agent SDK spike.
 
 ## Code Quality
 

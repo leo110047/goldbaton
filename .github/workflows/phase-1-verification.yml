@@ -1,0 +1,46 @@
+name: Phase 1 verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: Static and generated bindings
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 24
+      - run: npm install --global @openai/codex@0.144.1
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+
+  windows-readiness:
+    name: Windows harness readiness
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 24
+      - run: npm install --global @openai/codex@0.144.1
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build

@@ -1,6 +1,7 @@
 node_modules/
 dist/
 coverage/
+spikes/codex/generated/
 .env
 .env.*
 !.env.example

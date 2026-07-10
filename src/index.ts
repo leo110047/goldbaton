@@ -1,4 +1,4 @@
 export const projectMetadata = {
   name: 'goldbaton',
-  phase: 'phase-0',
+  phase: 'phase-1',
 } as const;
